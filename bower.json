@@ -1,0 +1,17 @@
+{
+  "name": "cross-web-app",
+  "description": "",
+  "main": "index.html",
+  "authors": [
+    "Mario Aleo"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/mario-aleo/cross-web-app",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

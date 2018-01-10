@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/style.css" rel="stylesheet">
+    </head>
+    <body>
+        <script src="components/es6/es6Samples.js"></script>
+        <script>
+            const arrNumeros = [ 1, 1, 2, 3, 5, 8, 13, 21];
+            const arrPessoas = [
+                { nome: "Mario", idade: 23 },
+                { nome: "Maria", idade: 12 },
+                { nome: "Jose", idade: 18 },
+                { nome: "Joao", idade: 8 },
+                { nome: "Lais", idade: 21 },
+                { nome: "Carlos", idade: 17 }
+            ];
+            const arrNomes = [ "Mario", "Maria", "Jose", "Joao", "Lais", "Carlos" ];
+
+            // Map
+            console.log( mapToMaisUm(arrNumeros) );
+            // Filter
+            console.log( filterMaior18(arrPessoas) );
+            // Reduce
+            console.log( reduceArrToObj(arrNomes) );
+        </script>
+    </body>
+</html>
