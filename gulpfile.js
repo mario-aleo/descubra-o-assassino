@@ -18,7 +18,7 @@ gulp.task("min-css", () => gulp.src("components/**/*.css", { base: "." })
 	.pipe(gulp.dest("./build/"))
 );
 
-gulp.task("min-html", () => gulp.src("components/**/*.html", { base: "." })
+gulp.task("min-html", () => gulp.src(["index.html", "components/**/*.html"], { base: "." })
 	.pipe(minHtml())
 	.pipe(gulp.dest("./build/"))
 );
