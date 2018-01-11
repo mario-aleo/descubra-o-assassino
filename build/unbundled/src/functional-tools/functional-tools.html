@@ -1,0 +1,1 @@
+<html><head><script>const curry=(a)=>(...b)=>a.bind(null,...b),compose=(...a)=>(b)=>a.reduceRight((a,b)=>b(a),b),map=curry((a,b)=>b.map(a)),join=curry((a,b)=>b.join(a)),exec=curry((a,b)=>a.exec(b)),replace=curry((a,b,c)=>c.replace(a,b)),validateFetchResponse=(a)=>{if(200!=a.status)throw new Error(`Server Status ${a.status}`);return a.json()};</script></head><body></body></html>
