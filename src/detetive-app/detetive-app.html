@@ -74,6 +74,19 @@
 				right: 16px;
 				z-index: 1000;
 			}
+
+			#content {
+				display: flex;
+				flex-direction: column;
+			}
+
+			@media only screen and (min-width: 425px) {
+				paper-card,
+				paper-card:last-of-type  {
+					max-width: 512px;
+					margin: 16px auto;
+				}
+			}
 		</style>
 
 		<app-header-layout> 
@@ -199,17 +212,32 @@
 					dipatchPayload[attr] = attr == "gameKey" ? response.misterioId : response;
 					this.dispatch({ type: "NEW_GAME", payload: dipatchPayload });
 				});
+				const requestError = () => {
+						console.error(e);
+						this.$.toast.close();
+						this.$.toast.text = "Ops, algo saiu errado. Por favor, recarregue a pagina :)";
+						this.$.toast.open();
+				}
 
 				requestGameKey()
 					.then(validateFetchResponse)
-					.then(compose(requestAssassinsList, dispatchNewGame('gameKey')))
+					.then(dispatchNewGame('gameKey'))
+					.catch(requestError);
+
+				requestAssassinsList()
 					.then(validateFetchResponse)
-					.then(compose(requestPlacesList, dispatchNewGame('assassinsList')))
+					.then(dispatchNewGame('assassinsList'))
+					.catch(requestError);
+
+				requestPlacesList()
 					.then(validateFetchResponse)
-					.then(compose(requestWeaponsList, dispatchNewGame('placesList')))
+					.then(dispatchNewGame('placesList'))
+					.catch(requestError);
+
+				requestWeaponsList()
 					.then(validateFetchResponse)
 					.then(dispatchNewGame('weaponsList'))
-					.catch(e => console.error(e));
+					.catch(requestError);
 			}
 
 			sendTheory() {
@@ -226,7 +254,6 @@
 						IdArma: this._weaponsList[this.$.weaponsList.selected].Id
 					})
 				});
-
 				const validateTheory = response => {
 					switch (response) {
 						case 1:
@@ -248,11 +275,17 @@
 							return this.dispatch({ type: "END_GAME" })
 					}					
 				};
+				const requestError = () => {
+						console.error(e);
+						this.$.toast.close();
+						this.$.toast.text = "Ops, algo saiu errado. Por favor, recarregue a pagina :)";
+						this.$.toast.open();
+				}
 
 				sendTheory()
 					.then(validateFetchResponse)
 					.then(validateTheory)
-					.catch(e => console.error(e));
+					.catch(requestError);
 			}
 		}
 

@@ -31,8 +31,8 @@
                 "minify": true
             },
             "bundle": true,
-            "addServiceWorker": true,
-            "addPushManifest": true,
+            "addServiceWorker": false,
+            "addPushManifest": false,
             "insertPrefetchLinks": true
         },
         {
@@ -48,8 +48,8 @@
                 "minify": true
             },
             "bundle": false,
-            "addServiceWorker": true,
-            "addPushManifest": true,
+            "addServiceWorker": false,
+            "addPushManifest": false,
             "insertPrefetchLinks": true
         }
     ]

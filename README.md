@@ -1,33 +1,37 @@
-# \<detetive\>
+# \<detetive-app\>
 
 Jogo de Detetive
 
-## Install the Polymer-CLI
+## Pasta Build
 
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your application locally.
+Utilize um servidor de arquivos estaticos em qualquer uma das pastas dentro da pasta de build para executar o projeto
 
-## Viewing Your Application
 
-```
-$ polymer serve
-```
-
-## Building Your Application
+## Buildando a Aplicação
 
 ```
+$ npm install -g polymer-cli
+$ npm update
+$ bower update
 $ polymer build
 ```
 
-This will create builds of your application in the `build/` directory, optimized to be served in production. You can then serve the built versions by giving `polymer serve` a folder to serve from:
+## Sobre
 
-```
-$ polymer serve build/default
-```
+O projeto foi desenvolvido utilizando ES6, as bibliotecas Polymer e Redux e técnicas de PWA.
 
-## Running Tests
+A escolha do ES6 foi para poder utilizar a API de classes, mantendo um código mais limpo, legível
+   e com a possibilidade de utilização de herança de classes, além disso, acesso a Arrow Functions
+   pela sua facilidade em criar trechos de tecnicas de codigo funcional, além de permitir acesso ao this
+   do contexto no qual a função está inserida, reduzindo assim work arounds e linhas extras de código
+   e por fim a utilização de Fetch para realizar chamadas HTTP de maneira limpa e assincrona.
 
-```
-$ polymer test
-```
+A utilização da biblioteca Polymer foi pela sua facilidade em criar e utilizar web components, além
+   de fornecer métodos de configuração e build de projeto utilizando gulp.
 
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
+A biblioteca Redux foi utilizada para criar uma arquitetura de estado da aplicação de forma a simplificar a
+   criação, organização, alteração e manutenção da aplicação, além de manter seu estado de forma imutável
+   à possíveis efeitos colaterais.
+
+As técnicas de PWA foram utilizadas para manter a velocidade de apresentação da aplicação,
+   esperando assim a satisfação do usuário na sua utilização;
