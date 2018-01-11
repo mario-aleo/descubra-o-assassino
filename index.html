@@ -1,18 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title></title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-        <script src="components/poc-api-requests/poc-api-requests.js"></script>
+<!doctype html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-        <script>
-            getKey().then(key => window.key = key.misterioId);
-            getAssassinos().then(assassinos => window.assassinos = assassinos);
-            getLocais().then(locais => window.locais = locais);
-            getArmas().then(armas => window.armas = armas);
-        </script>
-    </body>
+		<title>Detetive</title>
+		<meta name="description" content="Jogo de Detetive">
+
+		<!-- See https://goo.gl/OOhYW5 -->
+		<link rel="manifest" href="/manifest.json">
+
+		<meta name="theme-color" content="#673AB7">
+
+		<link href="/icons/icon_72.png" rel="shortcut icon" />
+
+		<style>
+			body {
+				position: relative;
+				min-height: 100vh;
+				margin: 0;
+				letter-spacing: 0.05em;
+				font-family: sans-serif, Helvetica, Arial;
+			}
+
+			detetive-app[unresolved] {
+				display: flex;
+				height: 100vh;
+				background-color: #673AB7;
+			}
+		</style>
+	</head>
+
+	<body>
+		<detetive-app unresolved></detetive-app>
+
+		<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+		<script src="/node_modules/redux/dist/redux.min.js"></script>
+
+		<link rel="import" href="/src/detetive-app/detetive-app.html">
+	</body>
 </html>

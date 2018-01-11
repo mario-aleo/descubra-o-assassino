@@ -1,0 +1,15 @@
+<script>
+    const curry = fn => (...args) => fn.bind(null, ...args);
+    const compose = (...fns) => x => fns.reduceRight((v, f) => f(v), x);
+
+    const map = curry((fn, arr) => arr.map(fn));
+    const join = curry((joinOn, arr) => arr.join(joinOn));
+    const exec = curry((regex, str) => regex.exec(str));
+    const replace = curry((param, fn, str) => str.replace(param, fn));
+
+    const validateFetchResponse = response => {
+        if (response.status != 200)
+            throw new Error(`Server Status ${ response.status }`);
+        return response.json();
+    };
+</script>

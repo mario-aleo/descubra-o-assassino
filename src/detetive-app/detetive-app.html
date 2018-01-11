@@ -1,0 +1,261 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../bower_components/app-layout/app-scroll-effects/effects/waterfall.html">
+
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/av-icons.html">
+
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+
+<link rel="import" href="../detetive-redux/detetive-redux.html">
+<link rel="import" href="../functional-tools/functional-tools.html">
+
+<dom-module id="detetive-app">
+	<template>
+		<style>
+			:host {
+				display: block;
+
+				--primary-color: #673AB7;
+                --darker-primary-color: #512DA8;
+                --light-primary-color: #D1C4E9;
+                --secondary-color: #03A9F4;
+                --focus-color: #0288D1;
+                --primary-text: #212121;
+                --secondary-text: #727272;
+                --divider-color: #B6B6B6;
+				--basic-color: #EDECEC;
+
+                --paper-fab-background: var(--secondary-color);
+                --paper-fab-keyboard-focus-background: var(--focus-color);
+
+				--paper-menu-selected-item: var(--secondary-color);
+
+				min-height: 100vh;
+				background-color: var(--basic-color);
+			}
+
+			image,
+			embed,
+			object,
+			video {
+				max-width: 100%;
+			}
+
+			app-header {
+				width: 100%;
+				background-color: var(--primary-color);
+			}
+
+			app-toolbar div[main-title] {
+				color: #FFF;
+				background-color: var(--primary-color);
+			}
+
+			paper-card {
+				width: calc(100% - 16px);
+				margin: 16px 8px 0 8px;
+			}
+			paper-card:last-of-type {
+				margin: 16px 8px;
+			}
+
+			paper-fab {
+				position: fixed;
+				bottom: 16px;
+				right: 16px;
+				z-index: 1000;
+			}
+		</style>
+
+		<app-header-layout> 
+			<app-header slot="header" fixed effects="waterfall">
+				<app-toolbar>
+					<div main-title>
+						Detetive
+					</div>
+				</app-toolbar>
+			</app-header>
+
+			<section id="content">
+				<paper-card id="assassinsCard" heading="Assassinos">
+					<div class="card-content">
+						<paper-listbox id="assassinsList" selected="0" disabled="[[ !_completed ]]">
+							<template is="dom-repeat" items="[[ _assassinsList ]]" as="assassin">
+								<paper-item>[[ assassin.Nome ]]</paper-item>
+							</template>
+						</paper-listbox>
+					</div>
+				</paper-card>
+
+				<paper-card id="placesCard" heading="Locais">
+					<div class="card-content">
+						<paper-listbox id="placesList" selected="0" disabled="[[ !_completed ]]">
+							<template is="dom-repeat" items="[[ _placesList ]]" as="place">
+								<paper-item>[[ place.Nome ]]</paper-item>
+							</template>
+						</paper-listbox>
+					</div>
+				</paper-card>
+
+				<paper-card id="weaponsCard" heading="Armas">
+					<div class="card-content">
+						<paper-listbox id="weaponsList" selected="0" disabled="[[ !_completed ]]">
+							<template is="dom-repeat" items="[[ _weaponsList ]]" as="weapon">
+								<paper-item>[[ weapon.Nome ]]</paper-item>
+							</template>
+						</paper-listbox>
+					</div>
+				</paper-card>
+			</section>
+		</app-header-layout>
+
+		<template is="dom-if" if="[[ !_completed ]]">
+			<paper-fab
+				icon="send"
+				on-click="sendTheory">
+			</paper-fab>
+		</template>
+
+		<template is="dom-if" if="[[ _completed ]]">
+			<paper-fab
+				icon="play-arrow"
+				on-click="startNewGame">
+			</paper-fab>
+		</template>
+		
+		<paper-toast
+			id="toast"
+			vertical-offset="48">
+		</paper-toast>
+		
+	</template>
+
+	<script>
+		class DetetiveApp extends DetetiveBehavior(Polymer.Element) {
+			static get is() { return 'detetive-app'; }
+
+			static get properties() {
+				return {
+					_apiUrl: {
+						type: String,
+						readOnly: true,
+						value: "https://handson.eniwine.com.br/api/descubraoassassino"
+					},
+					_gameKey: {
+						type: String,
+						statePath: `gameKey`
+					},
+					_assassinsList: {
+						type: Array,
+						statePath: `assassinsList`
+					},
+					_placesList: {
+						type: Array,
+						statePath: `placesList`
+					},
+					_weaponsList: {
+						type: Array,
+						statePath: `weaponsList`
+					},
+					_completed: {
+						type: Boolean,
+						statePath: `completed`
+					}
+				};
+			}
+
+			ready() {
+				super.ready();
+				this.startNewGame();
+				this.removeAttribute(`unresolved`);
+			}
+
+			connectedCallback() {
+				super.connectedCallback();
+				// Register Service Worker
+				if (`serviceWorker` in navigator)
+				    navigator.serviceWorker.register(`../../service-worker.js`, {scope: `/`});
+				this.$.toast.text = "Selecione um assassino, um local, uma arma e me mande sua teoria, eu direi o que sei sobre ;)";
+				this.$.toast.open();
+			}
+
+			startNewGame() {
+				const requestGameKey = () => fetch(this._apiUrl);
+				const requestAssassinsList = () => fetch(`${this._apiUrl}/criminosos`);
+				const requestPlacesList = () => fetch(`${this._apiUrl}/locais`);
+				const requestWeaponsList = () => fetch(`${this._apiUrl}/armas`);
+				const dispatchNewGame = curry((attr, response) => {
+					let dipatchPayload = { completed: false };
+					response = JSON.parse(response);
+					dipatchPayload[attr] = attr == "gameKey" ? response.misterioId : response;
+					this.dispatch({ type: "NEW_GAME", payload: dipatchPayload });
+				});
+
+				requestGameKey()
+					.then(validateFetchResponse)
+					.then(compose(requestAssassinsList, dispatchNewGame('gameKey')))
+					.then(validateFetchResponse)
+					.then(compose(requestPlacesList, dispatchNewGame('assassinsList')))
+					.then(validateFetchResponse)
+					.then(compose(requestWeaponsList, dispatchNewGame('placesList')))
+					.then(validateFetchResponse)
+					.then(dispatchNewGame('weaponsList'))
+					.catch(e => console.error(e));
+			}
+
+			sendTheory() {
+				const sendTheory = () => fetch(this._apiUrl, {
+					method: "POST",
+					headers: {
+						"Accept": "application/json, application/xml, text/plain, text/html, *.*",
+						"Content-Type": "application/json;charset=UTF-8"
+					},
+					body: JSON.stringify({
+						idMisterio: this._gameKey,
+						IdSuspeito: this._assassinsList[this.$.assassinsList.selected].Id,
+						IdLocal: this._placesList[this.$.placesList.selected].Id,
+						IdArma: this._weaponsList[this.$.weaponsList.selected].Id
+					})
+				});
+
+				const validateTheory = response => {
+					switch (response) {
+						case 1:
+							this.$.toast.close();
+							this.$.toast.text = "Infelizmente o assassino está errado :(";
+							return this.$.toast.open();
+						case 2:
+							this.$.toast.close();
+							this.$.toast.text = "Infelizmente o local está errado :(";
+							return this.$.toast.open();
+						case 3:
+							this.$.toast.close();
+							this.$.toast.text = "Infelizmente a arma está errado :(";
+							return this.$.toast.open();
+						default:
+							this.$.toast.close();
+							this.$.toast.text = "Parábens, você desvendou o crime, clique no play para reiniciar :)";
+							this.$.toast.open();
+							return this.dispatch({ type: "END_GAME" })
+					}					
+				};
+
+				sendTheory()
+					.then(validateFetchResponse)
+					.then(validateTheory)
+					.catch(e => console.error(e));
+			}
+		}
+
+		window.customElements.define(DetetiveApp.is, DetetiveApp);
+	</script>
+</dom-module>

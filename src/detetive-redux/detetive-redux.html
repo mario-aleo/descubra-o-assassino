@@ -1,0 +1,34 @@
+<link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html">
+
+<script>
+    const initialDetetiveReducerState = {
+        gameKey: null,
+        assassinsList: [
+            { Nome: "Carregando..." }
+        ],
+        placesList: [
+            { Nome: "Carregando..." }
+        ],
+        weaponsList: [
+            { Nome: "Carregando..." }
+        ],
+        completed: false
+    };
+
+    const detetiveReducer = (state, action) => {
+        if (!state)
+            return initialDetetiveReducerState;
+        let newState;
+        switch (action.type) {
+            case "NEW_GAME":
+                return Object.assign({}, state, action.payload);
+            case "END_GAME":
+                return Object.assign({}, state, { completed: true });
+            default:
+               return Object.assign({}, state);
+        }
+    }
+
+    const detetiveStore = Redux.createStore(detetiveReducer);
+    const DetetiveBehavior = PolymerRedux(detetiveStore);
+</script>
